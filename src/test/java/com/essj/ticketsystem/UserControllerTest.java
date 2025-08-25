@@ -26,7 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class) // Aponta para a classe que será testada
-@AutoConfigureMockMvc
 public class UserControllerTest {
 
     @Autowired
