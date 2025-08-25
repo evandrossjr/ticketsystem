@@ -1,8 +1,9 @@
 package com.essj.ticketsystem.models.enums;
 
-public enum Status {
+public enum TicketStatus {
     OPEN,
     IN_PROGRESS,
     RESOLVED,
-    CLOSED
+    CLOSED,
+    ARCHIVED
 }

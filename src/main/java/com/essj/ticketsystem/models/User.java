@@ -1,6 +1,7 @@
 package com.essj.ticketsystem.models;
 
 
+import com.essj.ticketsystem.models.enums.UserRole;
 import jakarta.persistence.*;
 
 @Entity
@@ -20,14 +21,19 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
     // Constructors
     public User() {
     }
 
-    public User(String username, String password, String email) {
+    public User(String username, String password, String email, UserRole role) {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.role = role;
     }
 
     // Getters and Setters
@@ -63,5 +69,11 @@ public class User {
         this.email = email;
     }
 
+    public UserRole getRole() {
+        return role;
+    }
 
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
 }

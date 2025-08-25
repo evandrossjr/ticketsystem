@@ -1,9 +1,11 @@
 package com.essj.ticketsystem.models;
 
 
-import com.essj.ticketsystem.models.enums.Priority;
-import com.essj.ticketsystem.models.enums.Status;
+import com.essj.ticketsystem.models.enums.TicketPriority;
+import com.essj.ticketsystem.models.enums.TicketStatus;
 import jakarta.persistence.*;
+
+import java.time.Instant;
 
 @Entity
 @Table(name = "tb_tickets")
@@ -21,17 +23,17 @@ public class Ticket {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private TicketStatus status;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Priority priority;
+    private TicketPriority priority;
 
     @Column(nullable = false)
-    private String createdAt;
+    private Instant createdAt;
 
     @Column(nullable = false)
-    private String updatedAt;
+    private Instant updatedAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -42,7 +44,7 @@ public class Ticket {
 
     public Ticket() { }
 
-    public Ticket(String title, String description, Status status, Priority priority, String createdAt, String updatedAt, User user) {
+    public Ticket(String title, String description, TicketStatus status, TicketPriority priority, Instant createdAt, Instant updatedAt, User user) {
         this.title = title;
         this.description = description;
         this.status = status;
@@ -79,35 +81,35 @@ public class Ticket {
         this.description = description;
     }
 
-    public Status getStatus() {
+    public TicketStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(TicketStatus status) {
         this.status = status;
     }
 
-    public Priority getPriority() {
+    public TicketPriority getPriority() {
         return priority;
     }
 
-    public void setPriority(Priority priority) {
+    public void setPriority(TicketPriority priority) {
         this.priority = priority;
     }
 
-    public String getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 
-    public String getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
 

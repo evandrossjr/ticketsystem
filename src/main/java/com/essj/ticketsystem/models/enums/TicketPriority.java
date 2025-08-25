@@ -1,6 +1,6 @@
 package com.essj.ticketsystem.models.enums;
 
-public enum Priority {
+public enum TicketPriority {
     LOW,
     MEDIUM,
     HIGH,
