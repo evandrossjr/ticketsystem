@@ -45,7 +45,7 @@ public class UserControllerTest {
         // Define o comportamento do mock: quando findAll() for chamado, retorne a lista de DTOs.
         when(userService.findAll()).thenReturn(userList);
 
-        mockMvc.perform(get("/api/users"))
+        mockMvc.perform(get("/api/users/"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[0].username").value("joao_silva"));
@@ -58,7 +58,7 @@ public class UserControllerTest {
         // Define o comportamento do mock: quando save() for chamado com qualquer DTO, retorne o mesmo DTO.
         when(userService.save(newUserDTO)).thenReturn(newUserDTO);
 
-        mockMvc.perform(post("/api/users")
+        mockMvc.perform(post("/api/users/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newUserDTO)))
                 .andExpect(status().isCreated())
