@@ -6,6 +6,7 @@ import com.essj.ticketsystem.models.enums.TicketStatus;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tb_tickets")
@@ -30,10 +31,10 @@ public class Ticket {
     private TicketPriority priority;
 
     @Column(nullable = false)
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
     @Column(nullable = false)
-    private Instant updatedAt;
+    private LocalDateTime updatedAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -44,7 +45,7 @@ public class Ticket {
 
     public Ticket() { }
 
-    public Ticket(String title, String description, TicketStatus status, TicketPriority priority, Instant createdAt, Instant updatedAt, User user) {
+    public Ticket(String title, String description, TicketStatus status, TicketPriority priority, LocalDateTime createdAt, LocalDateTime updatedAt, User user) {
         this.title = title;
         this.description = description;
         this.status = status;
@@ -52,6 +53,18 @@ public class Ticket {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.user = user;
+    }
+
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
     }
 
 
@@ -97,19 +110,19 @@ public class Ticket {
         this.priority = priority;
     }
 
-    public Instant getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Instant getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Instant updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 
