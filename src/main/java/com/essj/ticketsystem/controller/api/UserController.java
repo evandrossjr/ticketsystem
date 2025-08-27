@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,7 +53,7 @@ public class UserController {
     content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class)))
     @ApiResponse(responseCode = "400", description = "Invalid input data")
     @ApiResponse(responseCode = "500", description = "Internal server error")
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
         UserDTO createdUser = userService.save(userDTO);
         return ResponseEntity.status(201).body(createdUser);
 
