@@ -48,9 +48,9 @@ public class TicketService {
 
         Ticket ticket = TicketMapper.toEntity(ticketDTO);
 
-        ticket.setUser(user);
+        Ticket newTicket = new Ticket(ticket.getTitle(), ticket.getDescription(), ticket.getStatus(), ticket.getPriority(), user);
 
-        Ticket savedTicket = ticketRepository.save(ticket);
+        Ticket savedTicket = ticketRepository.save(newTicket);
         return TicketMapper.toDTO(savedTicket);
     }
 
