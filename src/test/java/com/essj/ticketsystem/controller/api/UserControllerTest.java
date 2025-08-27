@@ -6,6 +6,7 @@ import com.essj.ticketsystem.models.enums.UserRole;
 import com.essj.ticketsystem.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -63,5 +64,125 @@ public class UserControllerTest {
                         .content(objectMapper.writeValueAsString(newUserDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.username").value("maria_santos"));
+    }
+
+
+    @Test
+    public void testGetUserById() throws Exception {
+        UserDTO userDTO = new UserDTO("carlos_moura", "carlos@email.com", UserRole.SUPPORT_AGENT);
+
+        when(userService.findById(1L)).thenReturn(userDTO);
+        mockMvc.perform(get("/api/users/{id}", 1L))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("carlos_moura"));
+    }
+
+    @Test
+    public void testGetUserById_NotFound() throws Exception {
+        when(userService.findById(999L)).thenThrow(new RuntimeException("User not found with id: 999"));
+
+        mockMvc.perform(get("/api/users/{id}", 999L))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testCreateUser_InvalidInput() throws Exception {
+        UserDTO invalidUserDTO = new UserDTO("", "invalid-email", null);
+
+        mockMvc.perform(post("/api/users/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidUserDTO)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testGetAllUsers_EmptyList() throws Exception {
+        when(userService.findAll()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/api/users/"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(0));
+    }
+
+    @Test
+    public void testCreateUser_DuplicateUsername() throws Exception {
+        UserDTO userDTO = new UserDTO("existing_user", "email@email.com", UserRole.USER);
+
+        when(userService.save(userDTO)).thenThrow(new RuntimeException("Username already exists"));
+        mockMvc.perform(post("/api/users/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(userDTO)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testGetUserById_InvalidId() throws Exception {
+        mockMvc.perform(get("/api/users/{id}", "invalid-id"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testCreateUser_MissingFields() throws Exception {
+        UserDTO incompleteUserDTO = new UserDTO(null, "", null);
+
+        mockMvc.perform(post("/api/users/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(incompleteUserDTO)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testGetAllUsers_InternalServerError() throws Exception {
+        when(userService.findAll()).thenThrow(new RuntimeException("Database connection error"));
+
+        mockMvc.perform(get("/api/users/"))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void testCreateUser_InternalServerError() throws Exception {
+        UserDTO userDTO = new UserDTO("new_user", "email@email.com", UserRole.USER);
+
+        when(userService.save(userDTO)).thenThrow(new RuntimeException("Database connection error"));
+        mockMvc.perform(post("/api/users/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(userDTO)))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void testGetUserById_InternalServerError() throws Exception {
+        when(userService.findById(1L)).thenThrow(new RuntimeException("Database connection error"));
+
+        mockMvc.perform(get("/api/users/{id}", 1L))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void testCreateUser_EmptyBody() throws Exception {
+        mockMvc.perform(post("/api/users/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(""))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testGetAllUsers_NullResponse() throws Exception {
+        when(userService.findAll()).thenReturn(null);
+
+        mockMvc.perform(get("/api/users/"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").doesNotExist());
+    }
+
+    @Test
+    public void testCreateUser_NullInput() throws Exception {
+        when(userService.save(null)).thenThrow(new RuntimeException("Input cannot be null"));
+
+        mockMvc.perform(post("/api/users/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(null)))
+                .andExpect(status().isBadRequest());
     }
 }
