@@ -47,6 +47,9 @@ public class TicketService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + ticketDTO.userId()));
 
         Ticket ticket = TicketMapper.toEntity(ticketDTO);
+
+        ticket.setUser(user);
+
         Ticket savedTicket = ticketRepository.save(ticket);
         return TicketMapper.toDTO(savedTicket);
     }

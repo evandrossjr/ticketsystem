@@ -16,9 +16,7 @@ public class TicketMapper {
                 ticket.getDescription(),
                 ticket.getStatus().name(),
                 ticket.getPriority().name(),
-                ticket.getCreatedAt(),
-                ticket.getUpdatedAt(),
-                ticket.getUserSummary().getId()
+                ticket.getUser().getId().toString()
         );
     }
 
@@ -31,8 +29,6 @@ public class TicketMapper {
         ticket.setDescription(ticketDTO.description());
         ticket.setStatus(TicketStatus.valueOf(ticketDTO.status().toUpperCase()));
         ticket.setPriority(TicketPriority.valueOf(ticketDTO.priority().toUpperCase()));
-        ticket.setCreatedAt(ticketDTO.createdAt());
-        ticket.setUpdatedAt(ticketDTO.updatedAt());
         return ticket;
     }
 }

@@ -7,8 +7,6 @@ public record TicketDTO(String title,
                         String description,
                         String status,
                         String priority,
-                        LocalDateTime createdAt,
-                        LocalDateTime updatedAt,
                         String userId) {
 }
 
