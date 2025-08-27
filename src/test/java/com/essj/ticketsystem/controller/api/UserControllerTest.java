@@ -2,6 +2,7 @@ package com.essj.ticketsystem.controller.api;
 
 
 import com.essj.ticketsystem.dtos.UserDTO;
+import com.essj.ticketsystem.exceptions.ResourceNotFoundException;
 import com.essj.ticketsystem.models.enums.UserRole;
 import com.essj.ticketsystem.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -79,7 +80,7 @@ public class UserControllerTest {
 
     @Test
     public void testGetUserById_NotFound() throws Exception {
-        when(userService.findById(999L)).thenThrow(new RuntimeException("User not found with id: 999"));
+        when(userService.findById(999L)).thenThrow(new ResourceNotFoundException("User not found with id: 999"));
 
         mockMvc.perform(get("/api/users/{id}", 999L))
                 .andExpect(status().isNotFound());
