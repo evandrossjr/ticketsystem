@@ -119,6 +119,6 @@ public class Ticket {
     }
 
     public UserSummary getUserSummary() {
-        return new UserSummary(user.getId(), user.getUsername());
+        return new UserSummary(user.getId().toString(), user.getUsername());
     }
 }

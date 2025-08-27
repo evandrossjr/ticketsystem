@@ -5,7 +5,7 @@ public class UserSummary {
     private final String id;
     private final String name;
 
-    public UserSummary(Long id, String name) {
+    public UserSummary(String id, String name) {
         this.id = id;
         this.name = name;
     }

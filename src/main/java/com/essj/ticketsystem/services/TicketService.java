@@ -43,7 +43,7 @@ public class TicketService {
 
     @Transactional
     public TicketDTO save(TicketDTO ticketDTO){
-        User user = userRepository.findById(ticketDTO.userId())
+        User user = userRepository.findById(Long.valueOf(ticketDTO.userId()))
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + ticketDTO.userId()));
 
         Ticket ticket = TicketMapper.toEntity(ticketDTO);
