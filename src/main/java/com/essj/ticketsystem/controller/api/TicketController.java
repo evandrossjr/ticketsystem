@@ -3,6 +3,7 @@ package com.essj.ticketsystem.controller.api;
 
 import com.essj.ticketsystem.dtos.TicketDTO;
 import com.essj.ticketsystem.services.TicketService;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,6 +21,7 @@ public class TicketController {
 
     private final TicketService ticketService;
 
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public TicketController(TicketService ticketService) {
         this.ticketService = ticketService;
     }

@@ -25,8 +25,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    // Constructors
-    public User() {
+
+    protected User() {
     }
 
     public User(String username, String password, String email, UserRole role) {
@@ -36,13 +36,11 @@ public class User {
         this.role = role;
     }
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
+    public User(User user) {
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Long getId() {
+        return id;
     }
 
     public String getUsername() {

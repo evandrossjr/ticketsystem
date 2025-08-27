@@ -5,9 +5,11 @@ import com.essj.ticketsystem.dtos.TicketDTO;
 import com.essj.ticketsystem.exceptions.ResourceNotFoundException;
 import com.essj.ticketsystem.mappers.TicketMapper;
 import com.essj.ticketsystem.models.Ticket;
+import com.essj.ticketsystem.models.User;
 import com.essj.ticketsystem.models.enums.TicketPriority;
 import com.essj.ticketsystem.models.enums.TicketStatus;
 import com.essj.ticketsystem.repositories.TicketRepository;
+import com.essj.ticketsystem.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,9 +20,11 @@ public class TicketService {
 
 
     private final TicketRepository ticketRepository;
+    private final UserRepository userRepository;
 
-    public TicketService(TicketRepository ticketRepository) {
+    public TicketService(TicketRepository ticketRepository, UserRepository userRepository) {
         this.ticketRepository = ticketRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional(readOnly = true)
@@ -39,6 +43,9 @@ public class TicketService {
 
     @Transactional
     public TicketDTO save(TicketDTO ticketDTO){
+        User user = userRepository.findById(ticketDTO.userId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + ticketDTO.userId()));
+
         Ticket ticket = TicketMapper.toEntity(ticketDTO);
         Ticket savedTicket = ticketRepository.save(ticket);
         return TicketMapper.toDTO(savedTicket);

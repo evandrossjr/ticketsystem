@@ -3,6 +3,7 @@ package com.essj.ticketsystem.models;
 
 import com.essj.ticketsystem.models.enums.TicketPriority;
 import com.essj.ticketsystem.models.enums.TicketStatus;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jakarta.persistence.*;
 
 import java.time.Instant;
@@ -40,8 +41,6 @@ public class Ticket {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // Constructors
-
     public Ticket() { }
 
     public Ticket(String title, String description, TicketStatus status, TicketPriority priority, LocalDateTime createdAt, LocalDateTime updatedAt, User user) {
@@ -67,14 +66,8 @@ public class Ticket {
     }
 
 
-    // Getters and Setters
-
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getTitle() {
@@ -125,11 +118,7 @@ public class Ticket {
         this.updatedAt = updatedAt;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    public UserSummary getUserSummary() {
+        return new UserSummary(user.getId(), user.getUsername());
     }
 }
