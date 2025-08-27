@@ -40,7 +40,6 @@ public class Ticket {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-
     // Constructors
 
     public Ticket() { }
