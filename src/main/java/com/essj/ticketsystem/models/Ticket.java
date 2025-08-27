@@ -43,14 +43,13 @@ public class Ticket {
 
     public Ticket() { }
 
-    public Ticket(String title, String description, TicketStatus status, TicketPriority priority, LocalDateTime createdAt, LocalDateTime updatedAt, User user) {
+    public Ticket(String title, String description, TicketStatus status, TicketPriority priority, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.title = title;
         this.description = description;
         this.status = status;
         this.priority = priority;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.user = user;
     }
 
 
@@ -118,11 +117,5 @@ public class Ticket {
         this.updatedAt = updatedAt;
     }
 
-    public User getUser() {
-        return user;
-    }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
 }
