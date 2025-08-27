@@ -16,13 +16,8 @@ public class UserMapper {
         );
     }
     public static User toEntity(UserDTO userDTO) {
-        if (userDTO == null) {
-            return null;
-        }
-        User user = new User();
-        user.setUsername(userDTO.username());
-        user.setEmail(userDTO.email());
-        user.setRole(userDTO.role());
-        return user;
+        if (userDTO == null) return null;
+        return new User(userDTO.username(), userDTO.email(), userDTO.role());
     }
+
 }

@@ -29,6 +29,7 @@ public class User {
     protected User() {
     }
 
+    // Full constructor
     public User(String username, String password, String email, UserRole role) {
         this.username = username;
         this.password = password;
@@ -36,8 +37,13 @@ public class User {
         this.role = role;
     }
 
-    public User(User user) {
+    // Constructor without password for cases where password is not needed
+    public User(String username, String email, UserRole role) {
+        this.username = username;
+        this.email = email;
+        this.role = role;
     }
+
 
     public Long getId() {
         return id;

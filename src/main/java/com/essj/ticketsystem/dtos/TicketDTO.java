@@ -9,6 +9,6 @@ public record TicketDTO(String title,
                         String priority,
                         LocalDateTime createdAt,
                         LocalDateTime updatedAt,
-                        Long userId) {
+                        String userId) {
 }
 

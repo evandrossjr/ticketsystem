@@ -24,26 +24,14 @@ public class DataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        User admin = new User();
-        admin.setUsername("admin");
-        admin.setPassword("1234");
-        admin.setEmail("admin@email.com");
-        admin.setRole(UserRole.valueOf("ADMIN"));
+        User admin = new User("admin","1234","admin@email.com", UserRole.ADMIN);
         userRepository.save(admin);
 
-        User user = new User();
-        user.setUsername("user");
-        user.setPassword("1234");
-        user.setEmail("user@email.com");
-        user.setRole(UserRole.valueOf("USER"));
+        User user = new User("user","1234","user@email.com", UserRole.USER);
         userRepository.save(user);
 
 
-        User support = new User();
-        support.setUsername("support");
-        support.setPassword("1234");
-        support.setEmail("support@email.com");
-        support.setRole(UserRole.valueOf("SUPPORT_AGENT"));
+        User support = new User("support","1234","support@email.com", UserRole.SUPPORT_AGENT);
         userRepository.save(support);
 
     }

@@ -18,7 +18,7 @@ public class TicketMapper {
                 ticket.getPriority().name(),
                 ticket.getCreatedAt(),
                 ticket.getUpdatedAt(),
-                ticket.getUser().getId()
+                ticket.getUserSummary().getId()
         );
     }
 
