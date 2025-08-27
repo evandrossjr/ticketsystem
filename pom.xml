@@ -81,10 +81,48 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 
+
+			<!-- SonarQube -->
 			<plugin>
 				<groupId>org.sonarsource.scanner.maven</groupId>
 				<artifactId>sonar-maven-plugin</artifactId>
 				<version>5.1.0.4751</version>
+			</plugin>
+
+			<!-- PMD -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>3.21.2</version>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<failOnViolation>false</failOnViolation> <!-- não quebra o build -->
+				</configuration>
+			</plugin>
+
+			<!-- SpotBugs -->
+			<plugin>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-maven-plugin</artifactId>
+				<version>4.8.6.0</version>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<failOnError>false</failOnError> <!-- não quebra o build -->
+				</configuration>
 			</plugin>
 
 		</plugins>
