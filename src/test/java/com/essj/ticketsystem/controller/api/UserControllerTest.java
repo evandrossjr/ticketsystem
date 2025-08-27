@@ -187,4 +187,5 @@ public class UserControllerTest {
                         .content(objectMapper.writeValueAsString(null)))
                 .andExpect(status().isBadRequest());
     }
+
 }
