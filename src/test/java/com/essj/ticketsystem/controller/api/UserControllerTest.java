@@ -3,6 +3,7 @@ package com.essj.ticketsystem.controller.api;
 
 import com.essj.ticketsystem.dtos.UserDTO;
 import com.essj.ticketsystem.exceptions.ResourceNotFoundException;
+import com.essj.ticketsystem.exceptions.UsernameAlreadyExistsException;
 import com.essj.ticketsystem.models.enums.UserRole;
 import com.essj.ticketsystem.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -110,7 +111,7 @@ public class UserControllerTest {
     public void testCreateUser_DuplicateUsername() throws Exception {
         UserDTO userDTO = new UserDTO("existing_user", "email@email.com", UserRole.USER);
 
-        when(userService.save(userDTO)).thenThrow(new RuntimeException("Username already exists"));
+        when(userService.save(userDTO)).thenThrow(new UsernameAlreadyExistsException("Username already exists"));
         mockMvc.perform(post("/api/users/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userDTO)))
