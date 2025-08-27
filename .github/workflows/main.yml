@@ -20,6 +20,6 @@ jobs:
       - name: Rodar Testes com Maven
         run: mvn test
       - name: Analisar Código com SonarQube
-        run: mvn -B sonar:sonar -Dsonar.projectKey=evandrossjr_ticketsystem -Dsonar.organization=evandrossjr -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=${{ secrets.SONAR_TOKEN }} -Dsonar.branch.name=main
+        run: mvn -B sonar:sonar -Dsonar.projectKey=ticketsystem -Dsonar.organization=evandrossjr -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=${{ secrets.SONAR_TOKEN }} -Dsonar.branch.name=main
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
