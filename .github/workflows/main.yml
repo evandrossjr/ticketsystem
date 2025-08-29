@@ -62,12 +62,18 @@ jobs:
         run: docker run --rm -v $(pwd)/docs:/docs diagrama-c4-image:latest python /docs/diagram.py
 
       # Passo 3: Fazer o commit da imagem em uma branch temporária e abrir um PR
+
+      - name: Criar branch temporária
+        run: git checkout -b "docs/update-diagram-${{ github.run_number }}"
+
       - name: Fazer Commit Automático
-        id: commit_step
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "Docs: Atualiza diagrama C4 (CI Build #${{ github.run_number }})"
-          branch: docs/update-diagram-${{ github.run_number }}
+          branch: "docs/update-diagram-${{ github.run_number }}"
+          create_pr: true
+          title: "Docs: Atualização Automática do Diagrama C4"
+          body: "Este PR foi criado automaticamente pelo fluxo de trabalho de CI para atualizar o diagrama de arquitetura."
           file_pattern: "docs/diagrama_tickets.png"
 
       - name: Criar Pull Request
