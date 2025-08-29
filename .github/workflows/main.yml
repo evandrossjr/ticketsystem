@@ -61,15 +61,22 @@ jobs:
       - name: Gerar Diagrama C4 no Contêiner
         run: docker run --rm -v $(pwd)/docs:/docs diagrama-c4-image:latest python /docs/diagram.py
 
+      # Passo 3: Salvar o artefato (a imagem gerada)
+      - name: Salvar Diagrama Gerado
+        uses: actions/upload-artifact@v4
+        with:
+           name: diagramas-c4
+           path: docs/diagrama_tickets.png
+
       - name: Criar branch temporária
         run: git checkout -b "docs/update-diagram-${{ github.run_number }}"
 
-      # Passo 3: Fazer o commit da imagem em uma branch temporária e abrir um PR
+      # Passo 4: Fazer o commit da imagem em uma branch temporária e abrir um PR
       - name: Fazer Commit Automático
         id: commit_step
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "Docs: Atualiza diagrama C4 (CI Build #${{ github.run_number }})"
+          commit_message: "Docs: Atualiza diagrama C4 (CI Build #${{ github.run_number }}) - ${{ github.sha }}"
           branch: "docs/update-diagram-${{ github.run_number }}"
           file_pattern: "docs/diagrama_tickets_*.png" # Padrão dinâmico
 

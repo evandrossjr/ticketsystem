@@ -13,6 +13,11 @@ with Diagram(
         "Cliente que interage com a API"
     )
 
+    usuario2 = Person(
+        "Usuário-Admin",
+        "Cliente que interage com a API"
+    )
+
     # Sistema Interno
     with SystemBoundary("Sistema de Gerenciamento de Tickets"):
         app = Container(
@@ -21,29 +26,6 @@ with Diagram(
             "Fornece endpoints JSON para tickets e usuários."
         )
 
-        app2 = Container(
-            "Aplicação API",
-            "Java REST API",
-            "Fornece endpoints JSON para tickets e usuários."
-        )
-
-        app200 = Container(
-            "Aplicação API",
-            "Java REST API",
-            "Fornece endpoints JSON para tickets e usuários."
-        )
-
-        app3 = Container(
-            "Aplicação API",
-            "Java REST API",
-            "Fornece endpoints JSON para tickets e usuários."
-        )
-
-        app4 = Container(
-            "Aplicação API",
-            "Java REST API",
-            "Fornece endpoints JSON para tickets e usuários."
-        )
 
         db = Database(
             "Banco de Dados SQL Local H2",
@@ -63,35 +45,6 @@ with Diagram(
             "Armazena dados de tickets e usuários."
         )
 
-        db41 = Database(
-            "Banco de Novos Dados Java RDS",
-            "Banco de dados em memória",
-            "Armazena dados de tickets e usuários."
-        )
-
-        db5 = Database(
-            "Banco de Dados Oracle",
-            "Banco de dados em memória",
-            "Armazena dados de tickets e usuários."
-        )
-
-        db7 = Database(
-            "Banco de Dados Oracle",
-            "Banco de dados em memória",
-            "Armazena dados de tickets e usuários."
-        )
-
-        db6 = Database(
-            "Banco de Dados Azure SQL",
-            "Banco de dados em memória",
-            "Armazena dados de tickets e usuários."
-        )
-
-        db9 = Database(
-            "Banco de Dados Bahia Cloud SQL",
-            "Banco de dados em memória",
-            "Armazena dados de tickets e usuários."
-        )
 
 
     # Relações entre os componentes
