@@ -1,5 +1,5 @@
 from diagrams import Diagram
-from diagrams.c4 import Person, Container, Database, SystemBoundary, Relationship
+from diagrams.c4 import Person, Container, Database, SystemBoundary, Relationship, System
 
 with Diagram(
     "Sistema de Gerenciamento de Tickets",
@@ -7,7 +7,6 @@ with Diagram(
     show=False,
     direction="TB"
 ):
-    # Componente externo: o usuário que interage com o sistema
     usuario = Person(
         "Usuário",
         "Acessa e gerencia tickets"
@@ -15,7 +14,6 @@ with Diagram(
 
     # Limite do sistema principal
     with SystemBoundary("Aplicação de Tickets"):
-        # Containers: os blocos principais da aplicação
         frontend = Container(
             "Frontend",
             "Aplicação Web",
@@ -28,8 +26,6 @@ with Diagram(
             "Fornece endpoints para a lógica de negócios em Java"
         )
 
-        # O backend da aplicação se conecta a dois bancos de dados
-        # Um para desenvolvimento e outro para produção
         with SystemBoundary("Local Development"):
             db_h2 = Database(
                 "Database (H2)",
@@ -44,13 +40,17 @@ with Diagram(
                 "Armazena dados de tickets e usuários."
             )
 
-    # O backend da aplicação se conecta a um serviço de e-mail externo
-    # O "Serviço de Notificação" deve ser um objeto, não um relacionamento.
-    servico_notificacao = Container(
-        "Serviço de Notificação (e.g. SendGrid)",
-        "Serviço de terceiros"
+    # Adicionado o Render como um sistema de deployment
+    render = System(
+        "Render",
+        "Ambiente de Deployment"
     )
 
+    servico_notificacao = Container(
+        "Serviço de Notificação (e.g. SendGrid)",
+        "Serviço de terceiros",
+        width="4" # Adicionado largura para o texto não cortar
+    )
 
     # Relações entre os componentes
     usuario >> Relationship("Acessa a aplicação") >> frontend
@@ -58,3 +58,6 @@ with Diagram(
     backend_api >> Relationship("Persiste dados") >> db_h2
     backend_api >> Relationship("Persiste dados") >> db_postgres
     backend_api >> Relationship("Envia e-mails") >> servico_notificacao
+
+    # Relação de deployment do frontend para o Render
+    frontend >> Relationship("Deploy") >> render
