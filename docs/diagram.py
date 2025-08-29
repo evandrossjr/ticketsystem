@@ -44,8 +44,13 @@ with Diagram(
                 "Armazena dados de tickets e usuários."
             )
 
-        # O backend da aplicação se conecta a um serviço de e-mail externo
-        servico_notificacao = Relationship("Serviço de Notificação (e.g. SendGrid)", "Envia e-mails")
+    # O backend da aplicação se conecta a um serviço de e-mail externo
+    # O "Serviço de Notificação" deve ser um objeto, não um relacionamento.
+    servico_notificacao = Container(
+        "Serviço de Notificação (e.g. SendGrid)",
+        "Serviço de terceiros"
+    )
+
 
     # Relações entre os componentes
     usuario >> Relationship("Acessa a aplicação") >> frontend
