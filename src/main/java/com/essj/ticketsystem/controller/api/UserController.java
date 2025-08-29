@@ -58,7 +58,6 @@ public class UserController {
     public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
         UserDTO createdUser = userService.save(userDTO);
         return ResponseEntity.status(201).body(createdUser);
-
     }
 
     @PutMapping("/{id}")
