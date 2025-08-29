@@ -66,6 +66,8 @@ jobs:
           commit_message: "Docs: Atualiza diagrama C4 (CI Build #${{ github.run_number }})"
           branch: "docs/update-diagram-${{ github.run_number }}"
           file_pattern: "docs/diagrama_tickets_*.png" # Padrão dinâmico
+          create_branch: true # CORRIGIDO: Agora a ação irá criar a branch.
+
       - name: Criar Pull Request
         if: steps.commit_step.outputs.changes_detected == 'true'
         uses: peter-evans/create-pull-request@v5 # Versão mais recente
