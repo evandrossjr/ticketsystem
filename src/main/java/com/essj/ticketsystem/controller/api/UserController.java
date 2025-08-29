@@ -37,6 +37,7 @@ public class UserController {
         UserDTO userDTO = userService.findById(id);
         return ResponseEntity.ok(userDTO);
 
+
     }
 
     @GetMapping("/")
