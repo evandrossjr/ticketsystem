@@ -66,16 +66,7 @@ jobs:
       - name: Criar branch temporária
         run: git checkout -b "docs/update-diagram-${{ github.run_number }}"
 
-      - name: Fazer Commit Automático
-        id: commit_step # Adicione um ID para este passo
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: "Docs: Atualiza diagrama C4 (CI Build #${{ github.run_number }})"
-          branch: "docs/update-diagram-${{ github.run_number }}"
-          file_pattern: "docs/diagrama_tickets.png"
-
-      - name: Criar Pull Request
-        if: steps.commit_step.outputs.committed == 'true' # Condição para criar o PR
+      - name: Criar Pull Request de Atualização
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -83,5 +74,5 @@ jobs:
           body: "Este PR foi criado automaticamente pelo fluxo de trabalho de CI para atualizar o diagrama de arquitetura."
           branch: "docs/update-diagram-${{ github.run_number }}"
           base: main
-
-
+          commit-message: "Docs: Atualiza diagrama C4 (CI Build #${{ github.run_number }})"
+          add-paths: 'docs/diagrama_tickets.png'
