@@ -48,48 +48,60 @@ jobs:
   generate-diagram:
     permissions:
       contents: write
+      pull-requests: write # Permissão para criar Pull Requests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       # Passo 1: Construir a imagem Docker
-      # O comando "docker build" procura o Dockerfile na raiz do projeto (ponto ".")
       - name: Construir a Imagem do Diagrama
         run: docker build -t diagrama-c4-image:latest .
 
-      # Passo 2: Rodar o contêiner com a imagem recém-criada
+      # Passo 2: Rodar o contêiner e gerar o diagrama
       - name: Gerar Diagrama C4 no Contêiner
-        run: docker run --rm -v $(pwd)/docs:/docs diagrama-c4-image:latest python /docs/diagram.py
+        run: docker run --rm -v $(pwd)/docs:/docs diagrama-c4-image:latest python /docs/diagrama.py
 
-      #verificação do arquivo gerado
-      - name: Verificar Arquivo Gerado
-        run: ls -la docs/
-
-      # Passo 3: Salvar o artefato (a imagem gerada)
-      - name: Salvar Diagrama Gerado
-        uses: actions/upload-artifact@v4
-        with:
-          name: diagramas-c4
-          path: docs/diagrama_tickets.png
-
-      #Passo 4: Commit e Push do arquivo gerado para o repositório
-      - name: Adicionar Imagem do Diagrama e Fazer Commit
+      # Passo 3: Fazer o commit da imagem em uma branch temporária e abrir um PR
+      - name: Fazer Commit Automático e Criar PR
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "Docs: Atualiza diagrama C4 (run ${{ github.run_number }}) - ${{ github.sha }}"
+          commit_message: "Docs: Atualiza diagrama C4 (CI Build #${{ github.run_number }})"
+          branch: "docs/update-diagram-${{ github.run_number }}"
+          create_pr: true
+          title: "Docs: Atualização Automática do Diagrama C4"
+          body: "Este PR foi criado automaticamente pelo fluxo de trabalho de CI para atualizar o diagrama de arquitetura."
           file_pattern: "docs/diagrama_tickets.png"
 
-      # Passo 5: Publicar o artefato como uma release no GitHub
+
+name: Criar Release
+
+on:
+  workflow_dispatch: # Permite que você execute este workflow manualmente
+  push:
+    tags:
+      - 'v*' # Roda quando você faz um push de uma nova tag (por ex., v1.0.0)
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      # O passo de criação do diagrama é Opcional aqui. Se o diagrama já existe,
+      # não é preciso gerá-lo de novo, basta fazer o upload.
       - name: Criar Release no GitHub
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v1.0.${{ github.run_number }}
-          release_name: "Release v1.0.${{ github.run_number }}"
+          tag_name: ${{ github.ref }}
+          release_name: "Release ${{ github.ref }}"
           draft: false
           prerelease: false
+
       - name: Upload do Artefato para a Release
         uses: actions/upload-release-asset@v1
         env:
@@ -99,7 +111,3 @@ jobs:
           asset_path: ./docs/diagrama_tickets.png
           asset_name: diagrama_tickets.png
           asset_content_type: image/png
-      - name: Confirmar Upload do Artefato
-        run: echo "Diagrama C4 carregado na release com sucesso!"
-      - name: Verificar a Release
-        run: echo "Verifique a seção de releases do repositório para ver o diagrama C4."
