@@ -40,7 +40,7 @@ with Diagram(
         )
 
         db = Database(
-            "Banco de SQL H2",
+            "Banco de Dados SQL Local H2",
             "Banco de dados em memória",
             "Armazena dados de tickets e usuários."
         )

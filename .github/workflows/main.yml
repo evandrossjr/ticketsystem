@@ -80,7 +80,7 @@ jobs:
           echo "${{ toJSON(steps.commit_step.outputs) }}"
 
       - name: Criar Pull Request
-        if: steps.commit_step.outputs.committed == 'true'
+        if: steps.commit_step.outputs.changes_detected == 'true'
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
