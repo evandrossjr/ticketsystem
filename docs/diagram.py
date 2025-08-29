@@ -9,7 +9,7 @@ with Diagram(
 ):
     # Componentes Externos
     usuario = Person(
-        "Usuário",
+        "Usuário-Admin",
         "Cliente que interage com a API"
     )
 
