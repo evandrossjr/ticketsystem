@@ -46,7 +46,7 @@ with Diagram(
         )
 
         db2 = Database(
-            "Banco de Dardos Postgress",
+            "Banco de Bahia Postgress",
             "Banco de dados em memória",
             "Armazena dados de tickets e usuários."
         )
