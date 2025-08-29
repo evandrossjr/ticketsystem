@@ -75,6 +75,12 @@ with Diagram(
             "Armazena dados de tickets e usuários."
         )
 
+        db8 = Database(
+            "Banco de Dados Azure SQL",
+            "Banco de dados em memória",
+            "Armazena dados de tickets e usuários."
+        )
+
 
     # Relações entre os componentes
     usuario >> Relationship("Usa a API REST") >> app
