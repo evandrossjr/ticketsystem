@@ -73,8 +73,12 @@ jobs:
           file_pattern: "docs/diagrama_tickets.png"
           skip_checkout: true
 
-      - name: Criar Pull Request
-        if: steps.commit_step.outputs.changes_detected == 'true'
+      - name: Depurar Saída do Commit
+        run: |
+          echo "Saída de `changes_detected`: ${{ steps.commit_step.outputs.changes_detected }}"
+
+      # Passo 4: Crie um Pull Request (com a condição removida para teste)
+      - name: Criar Pull Request de Teste
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -82,4 +86,3 @@ jobs:
           body: "Este PR foi criado automaticamente pelo fluxo de trabalho de CI para atualizar o diagrama de arquitetura."
           branch: "docs/update-diagram-${{ github.run_number }}"
           base: main
-
