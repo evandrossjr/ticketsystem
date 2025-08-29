@@ -9,37 +9,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: ticketsystem/Dockerfile:tag
+
     steps:
       - uses: actions/checkout@v4
-      - name: Configurar JDK
-        uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-          cache: maven
-      - name: Rodar Testes com Maven
-        run: mvn test
-      - name: Configurar Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-
-      - name: Instalar Dependências do Diagrama
-        run: pip install diagrams[c4] graphviz
-        working-directory: ./docs
-
-      - name: Instalar Graphviz
-        run: sudo apt-get update && sudo apt-get install -y graphviz
-
       - name: Gerar Diagrama C4
-        run: python diagram.py
-        working-directory: ./docs
-
-      - name: Salvar Diagrama Gerado como Artefato
+        run: python docs/diagrama.py
+      - name: Salvar Diagrama Gerado
         uses: actions/upload-artifact@v4
         with:
           name: diagramas-c4
-          path: docs/diagram_tickets.png
+          path: docs/diagrama_tickets.png
 
       - name: Cache SonarQube packages
         uses: actions/cache@v4
@@ -47,6 +28,7 @@ jobs:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
+
       - name: Cache Maven packages
         uses: actions/cache@v4
         with:
