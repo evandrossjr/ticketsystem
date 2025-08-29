@@ -19,6 +19,25 @@ jobs:
           cache: maven
       - name: Rodar Testes com Maven
         run: mvn test
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Instalar Dependências do Diagrama
+        run: pip install diagrams[c4] graphviz
+        working-directory: ./docs
+
+      - name: Gerar Diagrama C4
+        run: python diagrama.py
+        working-directory: ./docs
+
+      - name: Salvar Diagrama Gerado como Artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: diagramas-c4
+          path: docs/diagrama_tickets.png
+
       - name: Cache SonarQube packages
         uses: actions/cache@v4
         with:
