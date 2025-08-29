@@ -74,12 +74,18 @@ jobs:
           branch: "docs/update-diagram-${{ github.run_number }}"
           file_pattern: "docs/diagrama_tickets.png"
 
+
+      - run: |
+          echo "Commit realizado? ${{ steps.commit_step.outputs.committed }}"
+
+
       - name: Criar Pull Request
         if: steps.commit_step.outputs.committed == 'true'
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           title: "Docs: Atualização Automática do Diagrama C4"
           body: "Este PR foi criado automaticamente pelo fluxo de trabalho de CI para atualizar o diagrama de arquitetura."
           head: "docs/update-diagram-${{ github.run_number }}"
           base: main
+
