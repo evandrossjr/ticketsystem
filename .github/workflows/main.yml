@@ -70,11 +70,12 @@ jobs:
         with:
           commit_message: "Docs: Atualiza diagrama C4 (CI Build #${{ github.run_number }})"
           branch: "docs/update-diagram-${{ github.run_number }}"
+          file_pattern: "docs/diagrama_tickets.png"
           create_branch: true
 
       - name: Criar Pull Request
         if: steps.commit_step.outputs.changes_detected == 'true'
-        uses: peter-evans/create-pull-request@v5 # Versão mais recente
+        uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           title: "Docs: Atualização Automática do Diagrama C4"
