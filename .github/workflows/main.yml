@@ -48,7 +48,7 @@ jobs:
   generate-diagram:
     permissions:
       contents: write
-      pull-requests: write # Permissão para criar Pull Requests
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -81,5 +81,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           title: "Docs: Atualização Automática do Diagrama C4"
           body: "Este PR foi criado automaticamente pelo fluxo de trabalho de CI para atualizar o diagrama de arquitetura."
-          branch: "docs/update-diagram-${{ github.run_number }}"
+          head: "docs/update-diagram-${{ github.run_number }}"
           base: main
