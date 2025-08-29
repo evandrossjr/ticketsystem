@@ -52,12 +52,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       # Passo 1: Construir a imagem Docker
       - name: Construir a Imagem do Diagrama
         run: docker build -t diagrama-c4-image:latest .
+
       # Passo 2: Rodar o contêiner e gerar o diagrama
       - name: Gerar Diagrama C4 no Contêiner
         run: docker run --rm -v $(pwd)/docs:/docs diagrama-c4-image:latest python /docs/diagram.py
+
+      - name: Criar branch temporária
+        run: git checkout -b "docs/update-diagram-${{ github.run_number }}"
+
       # Passo 3: Fazer o commit da imagem em uma branch temporária e abrir um PR
       - name: Fazer Commit Automático
         id: commit_step
@@ -66,7 +72,6 @@ jobs:
           commit_message: "Docs: Atualiza diagrama C4 (CI Build #${{ github.run_number }})"
           branch: "docs/update-diagram-${{ github.run_number }}"
           file_pattern: "docs/diagrama_tickets_*.png" # Padrão dinâmico
-          create_branch: true # CORRIGIDO: Agora a ação irá criar a branch.
 
       - name: Criar Pull Request
         if: steps.commit_step.outputs.changes_detected == 'true'
