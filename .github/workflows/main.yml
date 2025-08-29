@@ -71,7 +71,7 @@ jobs:
           commit_message: "Docs: Atualiza diagrama C4 (CI Build #${{ github.run_number }})"
           branch: "docs/update-diagram-${{ github.run_number }}"
           file_pattern: "docs/diagrama_tickets.png"
-          create_branch: true
+          skip_checkout: true
 
       - name: Criar Pull Request
         if: steps.commit_step.outputs.changes_detected == 'true'
