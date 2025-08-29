@@ -74,9 +74,10 @@ jobs:
           branch: "docs/update-diagram-${{ github.run_number }}"
           file_pattern: "docs/diagrama_tickets.png"
 
-      - name: Debug commit output
+      - name: Depurar todas as saídas
         run: |
-          echo "Committed: ${{ steps.commit_step.outputs.committed }}"
+          echo "Todas as saídas de commit_step:"
+          echo "${{ toJSON(steps.commit_step.outputs) }}"
 
       - name: Criar Pull Request
         if: steps.commit_step.outputs.committed == 'true'
