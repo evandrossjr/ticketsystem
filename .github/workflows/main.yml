@@ -6,6 +6,7 @@ on:
   pull_request:
     branches: [ "main" ]
 
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,19 +14,22 @@ jobs:
       - uses: actions/checkout@v4
 
       # Passo 1: Construir a imagem Docker
+      # O comando "docker build" procura o Dockerfile na raiz do projeto (ponto ".")
       - name: Construir a Imagem do Diagrama
-        run: docker build -t diagram-c4-image:latest -f Dockerfile .
+        run: docker build -t diagrama-c4-image:latest .
 
       # Passo 2: Rodar o contêiner com a imagem recém-criada
-      - name: Rodar Contêiner com a Imagem do Diagrama
-        run: docker run --rm -v $(pwd)/docs:/docs diagram-c4-image:latest python /docs/diagram.py
+      - name: Gerar Diagrama C4 no Contêiner
+        run: docker run --rm -v $(pwd)/docs:/docs diagrama-c4-image:latest python /docs/diagram.py
 
       # Passo 3: Salvar o artefato (a imagem gerada)
       - name: Salvar Diagrama Gerado
         uses: actions/upload-artifact@v4
         with:
           name: diagramas-c4
-          path: docs/diagram_tickets.png
+          path: docs/diagrama_tickets.png
+
+
 
       #Análise de código SonarQube, PMD e SpotBugs
       - name: Cache SonarQube packages
