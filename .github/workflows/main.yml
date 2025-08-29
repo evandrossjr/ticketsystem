@@ -59,6 +59,10 @@ jobs:
       - name: Gerar Diagrama C4 no Contêiner
         run: docker run --rm -v $(pwd)/docs:/docs diagrama-c4-image:latest python /docs/diagram.py
 
+      #verificação do arquivo gerado
+      - name: Verificar Arquivo Gerado
+        run: ls -la docs/
+
       # Passo 3: Salvar o artefato (a imagem gerada)
       - name: Salvar Diagrama Gerado
         uses: actions/upload-artifact@v4
