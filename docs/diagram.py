@@ -3,7 +3,7 @@ from diagrams.c4 import Person, Container, Database, SystemBoundary, Relationshi
 
 with Diagram(
     "Sistema de Gerenciamento de Tickets",
-    filename="./docs/ddiagrama_tickets_${{ github.run_number }}",
+    filename="./docs/diagrama_tickets_${{ github.run_number }}",
     show=False,
     direction="TB"
 ):
