@@ -3,7 +3,7 @@ from diagrams.c4 import Person, Container, Database, SystemBoundary, Relationshi
 
 with Diagram(
     "Sistema de Gerenciamento de Tickets",
-    filename="./docs/diagrama_tickets.png",
+    filename="./docs/diagrama_tickets",
     show=False,
     direction="TB"
 ):
