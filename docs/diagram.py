@@ -1,9 +1,14 @@
+import sys
 from diagrams import Diagram
 from diagrams.c4 import Person, Container, Database, SystemBoundary, Relationship
 
+#Lê o número da build como argumento da linha de comando
+run_number = sys.argv[1]
+
+
 with Diagram(
     "Sistema de Gerenciamento de Tickets",
-    filename="./docs/diagrama_tickets_${{ github.run_number }}",
+    filename=f"./docs/diagrama_tickets_{run_number}",
     show=False,
     direction="TB"
 ):
@@ -14,7 +19,7 @@ with Diagram(
     )
 
     usuario2 = Person(
-        "Usuário-Admin",
+        "Usuário-Comum",
         "Cliente que interage com a API"
     )
 
