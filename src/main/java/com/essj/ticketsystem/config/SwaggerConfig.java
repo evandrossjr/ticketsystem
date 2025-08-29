@@ -15,7 +15,6 @@ public class SwaggerConfig {
                         .description("Documentação da API da aplicação para controle de chamaddos (tickets) - TicketSystem"));
 
     }
-
 }
 
 
