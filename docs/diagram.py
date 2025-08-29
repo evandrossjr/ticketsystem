@@ -45,17 +45,13 @@ with Diagram(
             "Armazena dados de tickets e usuários."
         )
 
-        db = Database(
+        db8 = Database(
             "Banco de Dados 100 SQL Local H2",
             "Banco de dados em memória",
             "Armazena dados de tickets e usuários."
         )
 
-         db = Database(
-            "Banco de Dados 288 SQL Local H2",
-            "Banco de dados em memória",
-            "Armazena dados de tickets e usuários."
-        )
+
 
 
 
