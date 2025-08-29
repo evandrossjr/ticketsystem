@@ -67,20 +67,15 @@ jobs:
         run: git checkout -b "docs/update-diagram-${{ github.run_number }}"
 
       - name: Fazer Commit Automático
+        id: commit_step
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "Docs: Atualiza diagrama C4 (CI Build #${{ github.run_number }})"
+          branch: "docs/update-diagram-${{ github.run_number }}"
           file_pattern: "docs/diagrama_tickets.png"
-          skip_push: true
-
-
-
-      - name: Debug commit output
-        run: |
-          echo "Committed: ${{ steps.commit_step.outputs.committed }}"
-
 
       - name: Criar Pull Request
+        if: steps.commit_step.outputs.committed == 'true'
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -88,7 +83,5 @@ jobs:
           body: "Este PR foi criado automaticamente pelo fluxo de trabalho de CI para atualizar o diagrama de arquitetura."
           branch: "docs/update-diagram-${{ github.run_number }}"
           base: main
-
-
 
 
