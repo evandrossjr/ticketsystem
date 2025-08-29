@@ -71,8 +71,9 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "Docs: Atualiza diagrama C4 (CI Build #${{ github.run_number }})"
+          # Padrão de arquivo para capturar o nome versionado.
+          file_pattern: "docs/diagrama_tickets_*.png"
           branch: "docs/update-diagram-${{ github.run_number }}"
-          file_pattern: "docs/diagrama_tickets.png"
 
       - name: Depurar todas as saídas
         run: |

@@ -3,7 +3,7 @@ from diagrams.c4 import Person, Container, Database, SystemBoundary, Relationshi
 
 with Diagram(
     "Sistema de Gerenciamento de Tickets",
-    filename="./docs/diagrama_tickets",
+    filename="./docs/ddiagrama_tickets_${{ github.run_number }}",
     show=False,
     direction="TB"
 ):
@@ -52,7 +52,7 @@ with Diagram(
         )
 
         db4 = Database(
-            "Banco de Dados AWS RDS",
+            "Banco de Novos Dados AWS RDS",
             "Banco de dados em memória",
             "Armazena dados de tickets e usuários."
         )
