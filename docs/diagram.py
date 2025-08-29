@@ -27,7 +27,7 @@ with Diagram(
             "Armazena dados de tickets e usuários."
         )
 
-        db = Database2(
+        db2 = Database(
             "Banco de Dados Postgress",
             "Banco de dados em memória",
             "Armazena dados de tickets e usuários."
