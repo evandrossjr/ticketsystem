@@ -75,7 +75,7 @@ jobs:
           file_pattern: "docs/diagrama_tickets.png"
 
       - name: Criar Pull Request
-        if: steps.commit_step.outputs.changes == 'true'
+        if: steps.commit_step.outputs.committed == 'true'
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
