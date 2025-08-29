@@ -59,7 +59,7 @@ jobs:
 
       # Passo 2: Rodar o contêiner e gerar o diagrama
       - name: Gerar Diagrama C4 no Contêiner
-        run: docker run --rm -v $(pwd)/docs:/docs diagrama-c4-image:latest python /docs/diagrama.py
+        run: docker run --rm -v $(pwd)/docs:/docs diagrama-c4-image:latest python /docs/diagram.py
 
       # Passo 3: Fazer o commit da imagem em uma branch temporária e abrir um PR
       - name: Fazer Commit Automático e Criar PR
