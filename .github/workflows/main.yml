@@ -29,14 +29,14 @@ jobs:
         working-directory: ./docs
 
       - name: Gerar Diagrama C4
-        run: python diagrama.py
+        run: python diagram.py
         working-directory: ./docs
 
       - name: Salvar Diagrama Gerado como Artefato
         uses: actions/upload-artifact@v4
         with:
           name: diagramas-c4
-          path: docs/diagrama_tickets.png
+          path: docs/diagram_tickets.png
 
       - name: Cache SonarQube packages
         uses: actions/cache@v4
