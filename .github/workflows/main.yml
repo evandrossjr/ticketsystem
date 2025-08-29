@@ -52,37 +52,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       # Passo 1: Construir a imagem Docker
       - name: Construir a Imagem do Diagrama
         run: docker build -t diagrama-c4-image:latest .
-
       # Passo 2: Rodar o contêiner e gerar o diagrama
       - name: Gerar Diagrama C4 no Contêiner
         run: docker run --rm -v $(pwd)/docs:/docs diagrama-c4-image:latest python /docs/diagram.py
-
       # Passo 3: Fazer o commit da imagem em uma branch temporária e abrir um PR
-
-      - name: Criar branch temporária
-        run: git checkout -b "docs/update-diagram-${{ github.run_number }}"
-
       - name: Fazer Commit Automático
         id: commit_step
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "Docs: Atualiza diagrama C4 (CI Build #${{ github.run_number }})"
-          # Padrão de arquivo para capturar o nome versionado.
-          file_pattern: "docs/diagrama_tickets_*.png"
           branch: "docs/update-diagram-${{ github.run_number }}"
-
-      - name: Depurar todas as saídas
-        run: |
-          echo "Todas as saídas de commit_step:"
-          echo "${{ toJSON(steps.commit_step.outputs) }}"
-
+          file_pattern: "docs/diagrama_tickets_*.png" # Padrão dinâmico
       - name: Criar Pull Request
         if: steps.commit_step.outputs.changes_detected == 'true'
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v5 # Versão mais recente
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           title: "Docs: Atualização Automática do Diagrama C4"
