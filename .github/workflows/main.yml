@@ -9,19 +9,25 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: ticketsystem/Dockerfile:tag
-
     steps:
       - uses: actions/checkout@v4
-      - name: Gerar Diagrama C4
-        run: python docs/diagrama.py
+
+      # Passo 1: Construir a imagem Docker
+      - name: Construir a Imagem do Diagrama
+        run: docker build -t diagram-c4-image:latest -f Dockerfile .
+
+      # Passo 2: Rodar o contêiner com a imagem recém-criada
+      - name: Rodar Contêiner com a Imagem do Diagrama
+        run: docker run --rm -v $(pwd)/docs:/docs diagram-c4-image:latest python /docs/diagram.py
+
+      # Passo 3: Salvar o artefato (a imagem gerada)
       - name: Salvar Diagrama Gerado
         uses: actions/upload-artifact@v4
         with:
           name: diagramas-c4
-          path: docs/diagrama_tickets.png
+          path: docs/diagram_tickets.png
 
+      #Análise de código SonarQube, PMD e SpotBugs
       - name: Cache SonarQube packages
         uses: actions/cache@v4
         with:
