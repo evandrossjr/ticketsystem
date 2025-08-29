@@ -27,7 +27,7 @@ with Diagram(
             "Fornece endpoints JSON para tickets e usuários."
         )
 
-      app200 = Container(
+        app200 = Container(
             "Aplicação API",
             "Java REST API",
             "Fornece endpoints JSON para tickets e usuários."
