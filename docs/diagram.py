@@ -7,54 +7,49 @@ with Diagram(
     show=False,
     direction="TB"
 ):
-    # Componentes Externos
+    # Componente externo: o usuário que interage com o sistema
     usuario = Person(
-        "Usuário-Admin",
-        "Cliente que interage com a API"
+        "Usuário",
+        "Acessa e gerencia tickets"
     )
 
-    usuario2 = Person(
-        "Usuário-Admin",
-        "Cliente que interage com a API"
-    )
-
-    # Sistema Interno
-    with SystemBoundary("Sistema de Gerenciamento de Tickets"):
-        app = Container(
-            "Aplicação API",
-            "Java REST API",
-            "Fornece endpoints JSON para tickets e usuários."
+    # Limite do sistema principal
+    with SystemBoundary("Aplicação de Tickets"):
+        # Containers: os blocos principais da aplicação
+        frontend = Container(
+            "Frontend",
+            "Aplicação Web",
+            "Interface do usuário construída com JavaScript"
         )
 
-
-        db = Database(
-            "Banco de Dados SQL Local H2",
-            "Banco de dados em memória",
-            "Armazena dados de tickets e usuários."
+        backend_api = Container(
+            "Backend API",
+            "Aplicação REST",
+            "Fornece endpoints para a lógica de negócios em Java"
         )
 
-        db2 = Database(
-            "Banco de Bahia Postgress",
-            "Banco de dados em memória",
-            "Armazena dados de tickets e usuários."
-        )
+        # O backend da aplicação se conecta a dois bancos de dados
+        # Um para desenvolvimento e outro para produção
+        with SystemBoundary("Local Development"):
+            db_h2 = Database(
+                "Database (H2)",
+                "Banco de Dados Local",
+                "Utilizado para desenvolvimento local."
+            )
 
-        db4 = Database(
-            "Banco de Novos Dados AWS RDS",
-            "Banco de dados em memória",
-            "Armazena dados de tickets e usuários."
-        )
+        with SystemBoundary("Railway"):
+            db_postgres = Database(
+                "Database (Postgres)",
+                "Banco de Dados de Produção",
+                "Armazena dados de tickets e usuários."
+            )
 
-        db8 = Database(
-            "Banco de Dados 100 SQL Local H2",
-            "Banco de dados em memória",
-            "Armazena dados de tickets e usuários."
-        )
-
-
-
-
+        # O backend da aplicação se conecta a um serviço de e-mail externo
+        servico_notificacao = Relationship("Serviço de Notificação (e.g. SendGrid)", "Envia e-mails")
 
     # Relações entre os componentes
-    usuario >> Relationship("Usa a API REST") >> app
-    app >> Relationship("Lê e escreve dados") >> db
+    usuario >> Relationship("Acessa a aplicação") >> frontend
+    frontend >> Relationship("Usa a API") >> backend_api
+    backend_api >> Relationship("Persiste dados") >> db_h2
+    backend_api >> Relationship("Persiste dados") >> db_postgres
+    backend_api >> Relationship("Envia e-mails") >> servico_notificacao
