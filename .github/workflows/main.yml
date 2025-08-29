@@ -86,7 +86,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           title: "Docs: Atualização Automática do Diagrama C4"
           body: "Este PR foi criado automaticamente pelo fluxo de trabalho de CI para atualizar o diagrama de arquitetura."
-          head: "docs/update-diagram-${{ github.run_number }}"
+          branch: "docs/update-diagram-${{ github.run_number }}"
           base: main
+
 
 

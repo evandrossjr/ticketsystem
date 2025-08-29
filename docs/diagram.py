@@ -33,6 +33,12 @@ with Diagram(
             "Fornece endpoints JSON para tickets e usuários."
         )
 
+        app4 = Container(
+            "Aplicação API",
+            "Java REST API",
+            "Fornece endpoints JSON para tickets e usuários."
+        )
+
         db = Database(
             "Banco de Dados H2",
             "Banco de dados em memória",
