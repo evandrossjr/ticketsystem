@@ -26,6 +26,9 @@ jobs:
           release_name: "Release ${{ github.ref }}"
           draft: false
           prerelease: false
+          body: |
+            Nesta release, o diagrama C4 (`diagrama_tickets.png`) foi atualizado.
+            Agora, o diagrama é automaticamente atualizado por um GitHub Action sempre que o arquivo `diagram.py` é alterado, gerando um Pull Request para aprovação.
 
       - name: Upload do Artefato para a Release
         uses: actions/upload-release-asset@v1
