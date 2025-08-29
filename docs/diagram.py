@@ -51,6 +51,12 @@ with Diagram(
             "Armazena dados de tickets e usuários."
         )
 
+         db = Database(
+            "Banco de Dados 288 SQL Local H2",
+            "Banco de dados em memória",
+            "Armazena dados de tickets e usuários."
+        )
+
 
 
     # Relações entre os componentes
