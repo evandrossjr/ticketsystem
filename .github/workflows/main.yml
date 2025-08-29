@@ -69,3 +69,35 @@ jobs:
         with:
           name: diagramas-c4
           path: docs/diagrama_tickets.png
+
+      #Passo 4: Commit e Push do arquivo gerado para o repositório
+      - name: Adicionar Imagem do Diagrama e Fazer Commit
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Docs: Atualiza diagrama C4 (run ${{ github.run_number }}) - ${{ github.sha }}"
+          file_pattern: "docs/diagrama_tickets.png"
+
+      # Passo 5: Publicar o artefato como uma release no GitHub
+      - name: Criar Release no GitHub
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          release_name: "Release v1.0.${{ github.run_number }}"
+          draft: false
+          prerelease: false
+      - name: Upload do Artefato para a Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./docs/diagrama_tickets.png
+          asset_name: diagrama_tickets.png
+          asset_content_type: image/png
+      - name: Confirmar Upload do Artefato
+        run: echo "Diagrama C4 carregado na release com sucesso!"
+      - name: Verificar a Release
+        run: echo "Verifique a seção de releases do repositório para ver o diagrama C4."
