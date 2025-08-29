@@ -76,7 +76,7 @@ with Diagram(
         )
 
         db9 = Database(
-            "Banco de Dados Google Cloud SQL",
+            "Banco de Dados Bahia Cloud SQL",
             "Banco de dados em memória",
             "Armazena dados de tickets e usuários."
         )

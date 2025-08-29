@@ -66,13 +66,21 @@ jobs:
       - name: Criar branch temporária
         run: git checkout -b "docs/update-diagram-${{ github.run_number }}"
 
-      - name: Criar Pull Request de Atualização
-        uses: peter-evans/create-pull-request@v5
+      - name: Fazer Commit Automático
+        id: commit_step
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: "Docs: Atualização Automática do Diagrama C4"
-          body: "Este PR foi criado automaticamente pelo fluxo de trabalho de CI para atualizar o diagrama de arquitetura."
+          commit_message: "Docs: Atualiza diagrama C4 (CI Build #${{ github.run_number }})"
           branch: "docs/update-diagram-${{ github.run_number }}"
-          base: main
-          commit-message: "Docs: Atualiza diagrama C4 (CI Build #${{ github.run_number }})"
-          add-paths: 'docs/diagrama_tickets.png'
+          file_pattern: "docs/diagrama_tickets.png"
+
+      - name: Criar Pull Request com gh CLI
+        if: steps.commit_step.outputs.committed == 'true'
+        run: |
+          gh pr create --title "Docs: Atualização Automática do Diagrama C4" \
+          --body "Este PR foi criado automaticamente pelo fluxo de trabalho de CI para atualizar o diagrama de arquitetura." \
+          --base main \
+          --head "docs/update-diagram-${{ github.run_number }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
