@@ -33,6 +33,12 @@ with Diagram(
             "Armazena dados de tickets e usuários."
         )
 
+        db3 = Database(
+            "Banco de Dados MySQL",
+            "Banco de dados em memória",
+            "Armazena dados de tickets e usuários."
+        )
+
     # Relações entre os componentes
     usuario >> Relationship("Usa a API REST") >> app
     app >> Relationship("Lê e escreve dados") >> db
