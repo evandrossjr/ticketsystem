@@ -51,7 +51,6 @@ public class Ticket {
         this.user = user;
     }
 
-
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
