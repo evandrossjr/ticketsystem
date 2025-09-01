@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.http.MediaType;
 
@@ -41,6 +42,7 @@ public class UserControllerTest {
     private UserService userService;
 
     @Test
+    @WithMockUser(username = "joao_silva", roles = {"USER"})
     public void testGetAllUsers() throws Exception {
         UserDTO user1 = new UserDTO("joao_silva", "joao@email.com", UserRole.USER);
         List<UserDTO> userList = Collections.singletonList(user1);
@@ -55,6 +57,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "joao_silva", roles = {"USER"})
     public void testCreateUser() throws Exception {
         UserDTO newUserDTO = new UserDTO("maria_santos", "maria@email.com", UserRole.ADMIN);
 
@@ -70,6 +73,7 @@ public class UserControllerTest {
 
 
     @Test
+    @WithMockUser(username = "joao_silva", roles = {"USER"})
     public void testGetUserById() throws Exception {
         UserDTO userDTO = new UserDTO("carlos_moura", "carlos@email.com", UserRole.SUPPORT_AGENT);
 
