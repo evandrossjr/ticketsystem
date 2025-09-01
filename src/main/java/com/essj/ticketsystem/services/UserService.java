@@ -27,6 +27,13 @@ public class UserService {
         return UserMapper.toDTO(user);
     }
 
+
+    public UserDTO findByUsernameIgnoreCase(String username) {
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with username: " + username));
+        return UserMapper.toDTO(user);
+    }
+
     public List<UserDTO> findAll(){
         return userRepository.findAll().stream()
                 .map(UserMapper::toDTO)
@@ -57,6 +64,7 @@ public class UserService {
         User updatedUser = userRepository.save(existingUser);
         return UserMapper.toDTO(updatedUser);
     }
+
 
 
 }

@@ -41,6 +41,8 @@ public class Ticket {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+
+
     public Ticket() { }
 
     public Ticket(String title, String description, TicketStatus status, TicketPriority priority, User user) {
