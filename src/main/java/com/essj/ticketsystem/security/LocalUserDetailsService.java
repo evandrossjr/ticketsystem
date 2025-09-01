@@ -30,6 +30,5 @@ public class LocalUserDetailsService implements UserDetailsService {
         System.out.println("Classe: " + user.getClass().getSimpleName());
 
         return new LocalUserDetails(user);
-
     }
 }
