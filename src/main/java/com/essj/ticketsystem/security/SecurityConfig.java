@@ -26,6 +26,7 @@ public class SecurityConfig {
                 .headers(headers -> headers.frameOptions(frame -> frame.disable()) )// To enable H2 console
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        .requestMatchers("api/users", "api/users/**").hasAnyRole("USER","ADMIN","SUPPORT_AGENT")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
