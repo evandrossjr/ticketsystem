@@ -68,6 +68,8 @@ public class UserControllerTest {
 
         UserDetails loggedInUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+
+
         UserDTO newUserDTO = new UserDTO("maria_santos", "maria@email.com", UserRole.ADMIN);
 
         // Define o comportamento do mock: quando save() for chamado com qualquer DTO, retorne o mesmo DTO.
