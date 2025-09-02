@@ -93,6 +93,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "joao_silva", roles = {"USER"})
     public void testGetUserById_NotFound() throws Exception {
 
         // Obtém o usuário autenticado do contexto de segurança
@@ -105,6 +106,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin_user", roles = {"ADMIN"})
     public void testCreateUser_InvalidInput() throws Exception {
         UserDTO invalidUserDTO = new UserDTO("", "invalid-email", null);
 
@@ -115,6 +117,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin_user", roles = {"ADMIN"})
     public void testGetAllUsers_EmptyList() throws Exception {
 
         // Obtém o usuário autenticado do contexto de segurança
@@ -129,6 +132,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin_user", roles = {"ADMIN"})
     public void testCreateUser_DuplicateUsername() throws Exception {
         UserDTO userDTO = new UserDTO("existing_user", "email@email.com", UserRole.USER);
 
@@ -140,13 +144,16 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "joao_silva", roles = {"USER"})
     public void testGetUserById_InvalidId() throws Exception {
         mockMvc.perform(get("/api/users/{id}", "invalid-id"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
+    @WithMockUser(username = "admin_user", roles = {"ADMIN"})
     public void testCreateUser_MissingFields() throws Exception {
+
         UserDTO incompleteUserDTO = new UserDTO(null, "", null);
 
         mockMvc.perform(post("/api/users/")
@@ -156,6 +163,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin_user", roles = {"ADMIN"})
     public void testGetAllUsers_InternalServerError() throws Exception {
 
         UserDetails loggedInUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -167,6 +175,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin_user", roles = {"ADMIN"})
     public void testCreateUser_InternalServerError() throws Exception {
         UserDTO userDTO = new UserDTO("new_user", "email@email.com", UserRole.USER);
 
@@ -178,6 +187,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin_user", roles = {"ADMIN"})
     public void testGetUserById_InternalServerError() throws Exception {
 
         UserDetails loggedInUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -189,6 +199,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin_user", roles = {"ADMIN"})
     public void testCreateUser_EmptyBody() throws Exception {
         mockMvc.perform(post("/api/users/")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -197,6 +208,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin_user", roles = {"ADMIN"})
     public void testGetAllUsers_NullResponse() throws Exception {
 
         UserDetails loggedInUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -209,6 +221,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin_user", roles = {"ADMIN"})
     public void testCreateUser_NullInput() throws Exception {
         when(userService.save(null)).thenThrow(new RuntimeException("Input cannot be null"));
 
