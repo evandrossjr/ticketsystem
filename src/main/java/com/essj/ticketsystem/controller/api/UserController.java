@@ -65,7 +65,11 @@ public class UserController {
     @ApiResponse(responseCode = "400", description = "Invalid input data")
     @ApiResponse(responseCode = "500", description = "Internal server error")
     public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
-        UserDTO createdUser = userService.save(userDTO);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails loggedInUser = (UserDetails) authentication.getPrincipal();
+
+        UserDTO createdUser = userService.save(userDTO, loggedInUser);
         return ResponseEntity.status(201).body(createdUser);
     }
 

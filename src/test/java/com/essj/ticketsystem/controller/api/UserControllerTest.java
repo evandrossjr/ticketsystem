@@ -65,10 +65,13 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "admin_user", roles = {"ADMIN"})
     public void testCreateUser() throws Exception {
+
+        UserDetails loggedInUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         UserDTO newUserDTO = new UserDTO("maria_santos", "maria@email.com", UserRole.ADMIN);
 
         // Define o comportamento do mock: quando save() for chamado com qualquer DTO, retorne o mesmo DTO.
-        when(userService.save(newUserDTO)).thenReturn(newUserDTO);
+        when(userService.save(newUserDTO, loggedInUser)).thenReturn(newUserDTO);
 
         mockMvc.perform(post("/api/users/")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -134,9 +137,12 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "admin_user", roles = {"ADMIN"})
     public void testCreateUser_DuplicateUsername() throws Exception {
+
+        UserDetails loggedInUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         UserDTO userDTO = new UserDTO("existing_user", "email@email.com", UserRole.USER);
 
-        when(userService.save(userDTO)).thenThrow(new UsernameAlreadyExistsException("Username already exists"));
+        when(userService.save(userDTO,loggedInUser)).thenThrow(new UsernameAlreadyExistsException("Username already exists"));
         mockMvc.perform(post("/api/users/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userDTO)))
@@ -177,9 +183,12 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "admin_user", roles = {"ADMIN"})
     public void testCreateUser_InternalServerError() throws Exception {
+
+        UserDetails loggedInUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         UserDTO userDTO = new UserDTO("new_user", "email@email.com", UserRole.USER);
 
-        when(userService.save(userDTO)).thenThrow(new RuntimeException("Database connection error"));
+        when(userService.save(userDTO,loggedInUser)).thenThrow(new RuntimeException("Database connection error"));
         mockMvc.perform(post("/api/users/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userDTO)))
@@ -223,7 +232,10 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "admin_user", roles = {"ADMIN"})
     public void testCreateUser_NullInput() throws Exception {
-        when(userService.save(null)).thenThrow(new RuntimeException("Input cannot be null"));
+
+        UserDetails loggedInUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        when(userService.save(null,loggedInUser)).thenThrow(new RuntimeException("Input cannot be null"));
 
         mockMvc.perform(post("/api/users/")
                         .contentType(MediaType.APPLICATION_JSON)
