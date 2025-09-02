@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.http.MediaType;
@@ -43,12 +44,12 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(username = "joao_silva", roles = {"USER"})
-    public void testGetAllUsers() throws Exception {
+    public void testGetAllUsers(UserDetails loggedInUser) throws Exception {
         UserDTO user1 = new UserDTO("joao_silva", "joao@email.com", UserRole.USER);
         List<UserDTO> userList = Collections.singletonList(user1);
 
         // Define o comportamento do mock: quando findAll() for chamado, retorne a lista de DTOs.
-        when(userService.findAll()).thenReturn(userList);
+        when(userService.findAll(loggedInUser)).thenReturn(userList);
 
         mockMvc.perform(get("/api/users/"))
                 .andExpect(status().isOk())
@@ -57,7 +58,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "joao_silva", roles = {"USER"})
+    @WithMockUser(username = "admin_user", roles = {"ADMIN"})
     public void testCreateUser() throws Exception {
         UserDTO newUserDTO = new UserDTO("maria_santos", "maria@email.com", UserRole.ADMIN);
 
@@ -74,18 +75,18 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(username = "joao_silva", roles = {"USER"})
-    public void testGetUserById() throws Exception {
+    public void testGetUserById(Long id, UserDetails loggedInUser) throws Exception {
         UserDTO userDTO = new UserDTO("carlos_moura", "carlos@email.com", UserRole.SUPPORT_AGENT);
 
-        when(userService.findById(1L)).thenReturn(userDTO);
+        when(userService.findById(1L, loggedInUser)).thenReturn(userDTO);
         mockMvc.perform(get("/api/users/{id}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value("carlos_moura"));
     }
 
     @Test
-    public void testGetUserById_NotFound() throws Exception {
-        when(userService.findById(999L)).thenThrow(new ResourceNotFoundException("User not found with id: 999"));
+    public void testGetUserById_NotFound(Long id, UserDetails loggedInUser) throws Exception {
+        when(userService.findById(999L, loggedInUser)).thenThrow(new ResourceNotFoundException("User not found with id: 999"));
 
         mockMvc.perform(get("/api/users/{id}", 999L))
                 .andExpect(status().isNotFound());
@@ -102,8 +103,8 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetAllUsers_EmptyList() throws Exception {
-        when(userService.findAll()).thenReturn(Collections.emptyList());
+    public void testGetAllUsers_EmptyList(UserDetails loggedInUser) throws Exception {
+        when(userService.findAll(loggedInUser)).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/api/users/"))
                 .andExpect(status().isOk())
@@ -139,8 +140,8 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetAllUsers_InternalServerError() throws Exception {
-        when(userService.findAll()).thenThrow(new RuntimeException("Database connection error"));
+    public void testGetAllUsers_InternalServerError(UserDetails loggedInUser) throws Exception {
+        when(userService.findAll(loggedInUser)).thenThrow(new RuntimeException("Database connection error"));
 
         mockMvc.perform(get("/api/users/"))
                 .andExpect(status().isInternalServerError());
@@ -158,8 +159,8 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetUserById_InternalServerError() throws Exception {
-        when(userService.findById(1L)).thenThrow(new RuntimeException("Database connection error"));
+    public void testGetUserById_InternalServerError(Long id, UserDetails loggedInUser) throws Exception {
+        when(userService.findById(1L,loggedInUser)).thenThrow(new RuntimeException("Database connection error"));
 
         mockMvc.perform(get("/api/users/{id}", 1L))
                 .andExpect(status().isInternalServerError());
@@ -174,8 +175,8 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetAllUsers_NullResponse() throws Exception {
-        when(userService.findAll()).thenReturn(null);
+    public void testGetAllUsers_NullResponse(UserDetails loggedInUser) throws Exception {
+        when(userService.findAll(loggedInUser)).thenReturn(null);
 
         mockMvc.perform(get("/api/users/"))
                 .andExpect(status().isOk())

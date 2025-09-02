@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,8 +34,8 @@ public class UserController {
     content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class)))
     @ApiResponse(responseCode = "404", description = "User not found")
     @ApiResponse(responseCode = "500", description = "Internal server error")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
-        UserDTO userDTO = userService.findById(id);
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id, UserDetails loggedInUser) {
+        UserDTO userDTO = userService.findById(id, loggedInUser);
         return ResponseEntity.ok(userDTO);
 
 
@@ -45,8 +46,8 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "Users retrieved successfully",
     content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class)))
     @ApiResponse(responseCode = "500", description = "Internal server error")
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-       List<UserDTO> users = userService.findAll();
+    public ResponseEntity<List<UserDTO>> getAllUsers(UserDetails loggedInUser) {
+       List<UserDTO> users = userService.findAll(loggedInUser);
        return ResponseEntity.ok(users);
     }
 

@@ -38,6 +38,11 @@ public class GlobalExceptionHandler   {
     }
 
 
+    @ExceptionHandler(CustomAccessDeniedException.class)
+    public ResponseEntity<String> handleCustomAccessDeniedException(CustomAccessDeniedException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
