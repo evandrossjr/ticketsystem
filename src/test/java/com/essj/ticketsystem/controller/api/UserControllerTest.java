@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -44,9 +45,13 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(username = "joao_silva", roles = {"USER"})
-    public void testGetAllUsers(UserDetails loggedInUser) throws Exception {
+    public void testGetAllUsers() throws Exception {
         UserDTO user1 = new UserDTO("joao_silva", "joao@email.com", UserRole.USER);
         List<UserDTO> userList = Collections.singletonList(user1);
+
+        // Obtém o usuário autenticado do contexto de segurança
+        UserDetails loggedInUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
 
         // Define o comportamento do mock: quando findAll() for chamado, retorne a lista de DTOs.
         when(userService.findAll(loggedInUser)).thenReturn(userList);
@@ -75,18 +80,25 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(username = "joao_silva", roles = {"USER"})
-    public void testGetUserById(Long id, UserDetails loggedInUser) throws Exception {
+    public void testGetUserById() throws Exception {
         UserDTO userDTO = new UserDTO("carlos_moura", "carlos@email.com", UserRole.SUPPORT_AGENT);
 
-        when(userService.findById(1L, loggedInUser)).thenReturn(userDTO);
+        // Obtém o usuário autenticado do contexto de segurança
+        UserDetails loggedInUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        when(userService.findById(1L,loggedInUser)).thenReturn(userDTO);
         mockMvc.perform(get("/api/users/{id}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value("carlos_moura"));
     }
 
     @Test
-    public void testGetUserById_NotFound(Long id, UserDetails loggedInUser) throws Exception {
-        when(userService.findById(999L, loggedInUser)).thenThrow(new ResourceNotFoundException("User not found with id: 999"));
+    public void testGetUserById_NotFound() throws Exception {
+
+        // Obtém o usuário autenticado do contexto de segurança
+        UserDetails loggedInUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        when(userService.findById(999L,loggedInUser)).thenThrow(new ResourceNotFoundException("User not found with id: 999"));
 
         mockMvc.perform(get("/api/users/{id}", 999L))
                 .andExpect(status().isNotFound());
@@ -103,7 +115,11 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetAllUsers_EmptyList(UserDetails loggedInUser) throws Exception {
+    public void testGetAllUsers_EmptyList() throws Exception {
+
+        // Obtém o usuário autenticado do contexto de segurança
+        UserDetails loggedInUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         when(userService.findAll(loggedInUser)).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/api/users/"))
@@ -140,7 +156,10 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetAllUsers_InternalServerError(UserDetails loggedInUser) throws Exception {
+    public void testGetAllUsers_InternalServerError() throws Exception {
+
+        UserDetails loggedInUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         when(userService.findAll(loggedInUser)).thenThrow(new RuntimeException("Database connection error"));
 
         mockMvc.perform(get("/api/users/"))
@@ -159,8 +178,11 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetUserById_InternalServerError(Long id, UserDetails loggedInUser) throws Exception {
-        when(userService.findById(1L,loggedInUser)).thenThrow(new RuntimeException("Database connection error"));
+    public void testGetUserById_InternalServerError() throws Exception {
+
+        UserDetails loggedInUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        when(userService.findById(1L, loggedInUser)).thenThrow(new RuntimeException("Database connection error"));
 
         mockMvc.perform(get("/api/users/{id}", 1L))
                 .andExpect(status().isInternalServerError());
@@ -175,7 +197,10 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetAllUsers_NullResponse(UserDetails loggedInUser) throws Exception {
+    public void testGetAllUsers_NullResponse() throws Exception {
+
+        UserDetails loggedInUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         when(userService.findAll(loggedInUser)).thenReturn(null);
 
         mockMvc.perform(get("/api/users/"))
