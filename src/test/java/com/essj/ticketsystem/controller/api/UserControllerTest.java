@@ -5,6 +5,7 @@ import com.essj.ticketsystem.dtos.UserDTO;
 import com.essj.ticketsystem.exceptions.ResourceNotFoundException;
 import com.essj.ticketsystem.exceptions.UsernameAlreadyExistsException;
 import com.essj.ticketsystem.models.enums.UserRole;
+import com.essj.ticketsystem.security.SecurityConfig;
 import com.essj.ticketsystem.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import org.springframework.context.annotation.Import;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -23,15 +25,18 @@ import org.springframework.http.MediaType;
 import java.util.Collections;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(UserController.class) // Aponta para a classe que será testada
-@AutoConfigureMockMvc // Adicione esta linha
+@WebMvcTest(UserController.class)
+@AutoConfigureMockMvc
+@Import(SecurityConfig.class)
 public class UserControllerTest {
 
     @Autowired
@@ -66,16 +71,16 @@ public class UserControllerTest {
     @WithMockUser(username = "admin_user", roles = {"ADMIN"})
     public void testCreateUser() throws Exception {
 
-        UserDetails loggedInUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-
 
         UserDTO newUserDTO = new UserDTO("maria_santos", "maria@email.com", UserRole.ADMIN);
 
-        // Define o comportamento do mock: quando save() for chamado com qualquer DTO, retorne o mesmo DTO.
-        when(userService.save(newUserDTO, loggedInUser)).thenReturn(newUserDTO);
+
+        // Use any() para o UserDetails para tornar o teste mais robusto
+        when(userService.save(any(UserDTO.class), any(UserDetails.class))).thenReturn(newUserDTO);
+
 
         mockMvc.perform(post("/api/users/")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newUserDTO)))
                 .andExpect(status().isCreated())
