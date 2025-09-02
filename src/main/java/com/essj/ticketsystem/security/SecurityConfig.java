@@ -26,8 +26,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers.frameOptions(frame -> frame.disable()) )// To enable H2 console
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html","/api/users","/login", "/login**","/login", "/css/**", "/js/**","/h2-console/**","/registro").permitAll()
                         .requestMatchers("/api/users/", "/api/users/**").hasAnyRole("USER","ADMIN","SUPPORT_AGENT")
+                        .requestMatchers("/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html","/api/users","/login", "/login**","/login", "/css/**", "/js/**","/h2-console/**","/registro").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
