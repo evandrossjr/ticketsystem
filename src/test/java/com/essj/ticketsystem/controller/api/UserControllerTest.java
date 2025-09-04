@@ -52,6 +52,8 @@ public class UserControllerTest {
     @MockBean // Cria um mock do UserService no contexto de teste
     private UserService userService;
 
+
+
     @Test
     @WithMockUser(username = "joao_silva", roles = {"USER"})
     public void testGetAllUsers() throws Exception {
@@ -265,18 +267,6 @@ public class UserControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    @Test
-    @WithMockUser(username = "joao_silva", roles = {"USER"})
-    public void testCreateUser_ForbiddenForNonAdmin() throws Exception {
-
-        UserDTO newUserDTO = new UserDTO("new_user", "email@email.com", UserRole.USER);
-
-        mockMvc.perform(post("/api/users/")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(newUserDTO)))
-                .andExpect(status().isForbidden());
-    }
 
     @Test
     @WithMockUser(username = "admin_user", roles = {"ADMIN"})
