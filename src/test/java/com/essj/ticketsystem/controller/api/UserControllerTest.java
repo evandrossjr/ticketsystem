@@ -268,7 +268,6 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "joao_silva", roles = {"USER"})
     public void testCreateUser_ForbiddenForNonAdmin() throws Exception {
-        UserDetails loggedInUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         UserDTO newUserDTO = new UserDTO("new_user", "email@email.com", UserRole.USER);
 
@@ -309,6 +308,8 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.username").value("valid_user"));
     }
 
+    @Test
+    @WithMockUser(username = "joao_silva", roles = {"USER"})
     public void testGetUserById_ValidId() throws Exception {
         UserDTO userDTO = new UserDTO("valid_user", "email@email.com", UserRole.USER);
         UserDetails loggedInUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
