@@ -54,9 +54,13 @@ public class UserService {
 
     public UserDTO save(UserDTO userDTO, UserDetails loggedInUser){
 
-        if (loggedInUser.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_SUPPORT_AGENT"))) {
+        if (!loggedInUser.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_SUPPORT_AGENT"))) {
             throw new CustomAccessDeniedException("Acesso negado: você não tem permissão para ver todos os usuários.");
+
+
         }
+
+
         User user = UserMapper.toEntity(userDTO);
         User savedUser = userRepository.save(user);
         return UserMapper.toDTO(savedUser);
