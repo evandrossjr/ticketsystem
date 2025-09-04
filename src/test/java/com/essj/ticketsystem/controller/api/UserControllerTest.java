@@ -255,7 +255,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "joao_silva", roles = {"USER"})
+    @WithMockUser(username = "admin_user", roles = {"ADMIN"})
     public void testGetUserById_UnauthorizedAccess() throws Exception {
         UserDetails loggedInUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
