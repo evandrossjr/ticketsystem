@@ -266,8 +266,10 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin_user", roles = {"ADMIN"})
+    @WithMockUser(username = "joao_silva", roles = {"USER"})
     public void testCreateUser_ForbiddenForNonAdmin() throws Exception {
+        UserDetails loggedInUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         UserDTO newUserDTO = new UserDTO("new_user", "email@email.com", UserRole.USER);
 
         mockMvc.perform(post("/api/users/")
