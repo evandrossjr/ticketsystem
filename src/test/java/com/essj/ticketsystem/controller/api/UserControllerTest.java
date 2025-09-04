@@ -254,4 +254,66 @@ public class UserControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    @WithMockUser(username = "joao_silva", roles = {"USER"})
+    public void testGetUserById_UnauthorizedAccess() throws Exception {
+        UserDetails loggedInUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        when(userService.findById(2L, loggedInUser)).thenThrow(new ResourceNotFoundException("User not found with id: 2"));
+
+        mockMvc.perform(get("/api/users/{id}", 2L))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(username = "regular_user", roles = {"USER"})
+    public void testCreateUser_ForbiddenForNonAdmin() throws Exception {
+        UserDTO newUserDTO = new UserDTO("new_user", "email@email.com", UserRole.USER);
+        mockMvc.perform(post("/api/users/")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(newUserDTO)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(username = "admin_user", roles = {"ADMIN"})
+    public void testGetAllUsers_AsAdmin() throws Exception {
+        UserDTO user1 = new UserDTO("user_one", "email@email.com", UserRole.USER);
+        UserDTO user2 = new UserDTO("user_two", "email2@email.com", UserRole.SUPPORT_AGENT);
+        List<UserDTO> userList = List.of(user1, user2);
+        UserDetails loggedInUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        when(userService.findAll(loggedInUser)).thenReturn(userList);
+        mockMvc.perform(get("/api/users/"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].username").value("user_one"))
+                .andExpect(jsonPath("$[1].username").value("user_two"));
+    }
+
+    @Test
+    @WithMockUser(username = "admin_user", roles = {"ADMIN"})
+    public void testCreateUser_ValidInput() throws Exception {
+        UserDTO newUserDTO = new UserDTO("valid_user", "email@email.com", UserRole.USER);
+        UserDetails loggedInUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        when(userService.save(newUserDTO, loggedInUser)).thenReturn(newUserDTO);
+        mockMvc.perform(post("/api/users/")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(newUserDTO)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.username").value("valid_user"));
+    }
+
+    public void testGetUserById_ValidId() throws Exception {
+        UserDTO userDTO = new UserDTO("valid_user", "email@email.com", UserRole.USER);
+        UserDetails loggedInUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        when(userService.findById(1L, loggedInUser)).thenReturn(userDTO);
+        mockMvc.perform(get("/api/users/{id}", 1L))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("valid_user"));
+    }
+
+
 }
