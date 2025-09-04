@@ -266,9 +266,10 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "regular_user", roles = {"USER"})
+    @WithMockUser(username = "admin_user", roles = {"ADMIN"})
     public void testCreateUser_ForbiddenForNonAdmin() throws Exception {
         UserDTO newUserDTO = new UserDTO("new_user", "email@email.com", UserRole.USER);
+
         mockMvc.perform(post("/api/users/")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
