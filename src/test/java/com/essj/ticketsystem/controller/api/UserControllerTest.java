@@ -22,6 +22,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,9 +30,9 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -307,6 +308,19 @@ public class UserControllerTest {
         mockMvc.perform(get("/api/users/{id}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value("valid_user"));
+    }
+
+    @Test
+    @WithMockUser(username = "user_admin", roles = {"ADMIN"})
+    public void testDeleteUser_NotFound_Returns404NotFound() throws Exception{
+
+        Long nonExistentUserId = 999L;
+
+        mockMvc.perform(delete("/users/{id}", nonExistentUserId))
+                .andExpect(status().isNotFound())
+                .andExpect((ResultMatcher) content().string("User not found with id: " + nonExistentUserId));
+
+
     }
 
 
