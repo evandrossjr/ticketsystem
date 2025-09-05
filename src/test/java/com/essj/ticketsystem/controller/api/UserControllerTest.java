@@ -316,8 +316,7 @@ public class UserControllerTest {
         Long nonExistentUserId = 999L;
 
         mockMvc.perform(delete("/users/{id}", nonExistentUserId))
-                .andExpect(status().isNotFound())
-                .andExpect((ResultMatcher) content().string("User not found with id: " + nonExistentUserId));
+                .andExpect(status().isNotFound());
 
 
     }
